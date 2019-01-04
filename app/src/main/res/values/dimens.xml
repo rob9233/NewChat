@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="edit_text_height">60dp</dimen>
+    <dimen name="edit_text_padding_left">20dp</dimen>
+    <dimen name="item_radius">30dp</dimen>
 </resources>
