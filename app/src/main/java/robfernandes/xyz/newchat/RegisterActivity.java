@@ -14,10 +14,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.util.UUID;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -32,6 +39,7 @@ public class RegisterActivity extends AppCompatActivity {
     private Uri mImageUri;
     private static final String TAG = RegisterActivity.class.getSimpleName();
     private static final int PICK_IMAGE_REQUEST_CODE = 0;
+    private Uri imageDownloadUri;
 
 
     @Override
@@ -40,6 +48,7 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         mAuth = FirebaseAuth.getInstance();
+        mImageUri = null;
         initializeViews();
         setClickListeners();
     }
@@ -75,7 +84,8 @@ public class RegisterActivity extends AppCompatActivity {
                         || emailString == null
                         || emailString.isEmpty()
                         || passwordString == null
-                        || passwordString.isEmpty()) {
+                        || passwordString.isEmpty()
+                        || mImageUri == null) {
                     displayToast("All fields must be answer, please try again");
                 } else {
                     registerUser(usernameString, emailString, passwordString);
@@ -137,7 +147,34 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void saveUserInfoInFirebase() {
+        String filename = generateRandomFileName();
 
+        final StorageReference storageReference = FirebaseStorage
+                .getInstance()
+                .getReference()
+                .child("images/" + filename);
+
+        storageReference.putFile(mImageUri)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // Get a URI to the uploaded content
+                        storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                imageDownloadUri = uri;
+                            }
+                        });
+                    //
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle unsuccessful uploads
+                        // ...
+                    }
+                });
     }
 
     private void updateUI(FirebaseUser user) {
@@ -148,5 +185,9 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void displayToast(String message) {
         Toast.makeText(RegisterActivity.this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    private String generateRandomFileName() {
+        return UUID.randomUUID().toString();
     }
 }
