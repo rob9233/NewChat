@@ -22,6 +22,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText emailEditText;
     private EditText passwordEditText;
     private Button registerBtn;
+    private Button addImageBtn;
     private FirebaseAuth mAuth;
     private static final String TAG = RegisterActivity.class.getSimpleName();
 
@@ -41,6 +42,7 @@ public class RegisterActivity extends AppCompatActivity {
         emailEditText = findViewById(R.id.activity_register_email);
         passwordEditText = findViewById(R.id.activity_register_password);
         registerBtn = findViewById(R.id.activity_register_register_btn);
+        addImageBtn = findViewById(R.id.activity_register_add_photo_btn);
     }
 
     private void setClickListeners() {
@@ -71,6 +73,17 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         });
+
+        addImageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectImage();
+            }
+        });
+    }
+
+    private void selectImage() {
+        //select image
     }
 
     private void registerUser(String username, String email, String password) {

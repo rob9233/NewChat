@@ -7,12 +7,27 @@
     android:background="@color/background"
     tools:context=".RegisterActivity">
 
+    <Button
+        android:id="@+id/activity_register_add_photo_btn"
+        android:layout_width="@dimen/photo_btn_dimension"
+        android:layout_height="@dimen/photo_btn_dimension"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/btn_photo_shape"
+        android:text="@string/Add_image"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/photo_btn_text_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <EditText
         android:id="@+id/activity_register_username"
         android:layout_width="match_parent"
         android:layout_height="@dimen/edit_text_height"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="8dp"
         android:background="@drawable/round_edit_text"
         android:hint="@string/username"
@@ -20,14 +35,14 @@
         android:paddingLeft="@dimen/edit_text_padding_left"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/activity_register_add_photo_btn" />
 
     <EditText
         android:id="@+id/activity_register_email"
         android:layout_width="match_parent"
         android:layout_height="@dimen/edit_text_height"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:background="@drawable/round_edit_text"
         android:hint="@string/e_mail"
@@ -42,7 +57,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/edit_text_height"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:background="@drawable/round_edit_text"
         android:hint="Password"
