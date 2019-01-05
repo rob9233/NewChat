@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -126,6 +125,7 @@ public class RegisterActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             displayToast("Register succeed");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            saveUserInfoInFirebase();
                             updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -136,6 +136,10 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }
 
+    private void saveUserInfoInFirebase() {
+
+    }
+
     private void updateUI(FirebaseUser user) {
         if (user != null) {
             //update ui
@@ -144,23 +148,5 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void displayToast(String message) {
         Toast.makeText(RegisterActivity.this, message, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.d(TAG, "onPause: ");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume: ");
-    }
-
-    @Override
-    protected void onDestroy() {
-        Log.d(TAG, "onDestroy: ");
-        super.onDestroy();
     }
 }
