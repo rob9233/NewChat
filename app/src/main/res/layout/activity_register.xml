@@ -22,6 +22,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/activity_register_image_image_view"
+        android:layout_width="@dimen/photo_btn_dimension"
+        android:layout_height="@dimen/photo_btn_dimension"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/activity_register_add_photo_btn"
+        app:layout_constraintEnd_toEndOf="@+id/activity_register_add_photo_btn"
+        app:layout_constraintStart_toStartOf="@+id/activity_register_add_photo_btn"
+        app:layout_constraintTop_toTopOf="@+id/activity_register_add_photo_btn"
+        tools:srcCompat="@tools:sample/avatars[11]" />
+
     <EditText
         android:id="@+id/activity_register_username"
         android:layout_width="match_parent"
@@ -98,5 +110,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/activity_register_register_btn"
         app:layout_constraintVertical_bias="0.059" />
+
 
 </android.support.constraint.ConstraintLayout>

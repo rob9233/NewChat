@@ -1,11 +1,16 @@
 package robfernandes.xyz.newchat;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,8 +28,12 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText passwordEditText;
     private Button registerBtn;
     private Button addImageBtn;
+    private ImageView image;
     private FirebaseAuth mAuth;
+    private Uri mImageUri;
     private static final String TAG = RegisterActivity.class.getSimpleName();
+    private static final int PICK_IMAGE_REQUEST_CODE = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +52,7 @@ public class RegisterActivity extends AppCompatActivity {
         passwordEditText = findViewById(R.id.activity_register_password);
         registerBtn = findViewById(R.id.activity_register_register_btn);
         addImageBtn = findViewById(R.id.activity_register_add_photo_btn);
+        image = findViewById(R.id.activity_register_image_image_view);
     }
 
     private void setClickListeners() {
@@ -80,10 +90,31 @@ public class RegisterActivity extends AppCompatActivity {
                 selectImage();
             }
         });
+
+        image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectImage();
+            }
+        });
     }
 
     private void selectImage() {
-        //select image
+        Intent pickImageIntent = new Intent(Intent.ACTION_PICK);
+        pickImageIntent.setType("image/*");
+        startActivityForResult(pickImageIntent, PICK_IMAGE_REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK && requestCode == PICK_IMAGE_REQUEST_CODE) {
+            mImageUri = data.getData();
+            image.setImageURI(mImageUri);
+            addImageBtn.setVisibility(View.INVISIBLE);
+            image.setVisibility(View.VISIBLE);
+        }
     }
 
     private void registerUser(String username, String email, String password) {
@@ -113,5 +144,23 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void displayToast(String message) {
         Toast.makeText(RegisterActivity.this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause: ");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: ");
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.d(TAG, "onDestroy: ");
+        super.onDestroy();
     }
 }
