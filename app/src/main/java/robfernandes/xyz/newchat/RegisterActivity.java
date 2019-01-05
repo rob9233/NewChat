@@ -72,11 +72,11 @@ public class RegisterActivity extends AppCompatActivity {
                 String passwordString = passwordEditText.getText().toString();
 
                 if (usernameString == null
-                        || !usernameString.isEmpty()
+                        || usernameString.isEmpty()
                         || emailString == null
-                        || !emailString.isEmpty()
+                        || emailString.isEmpty()
                         || passwordString == null
-                        || !passwordString.isEmpty()) {
+                        || passwordString.isEmpty()) {
                     displayToast("All fields must be answer, please try again");
                 } else {
                     registerUser(usernameString, emailString, passwordString);
