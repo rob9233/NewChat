@@ -20,6 +20,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -39,8 +41,6 @@ public class RegisterActivity extends AppCompatActivity {
     private Uri mImageUri;
     private static final String TAG = RegisterActivity.class.getSimpleName();
     private static final int PICK_IMAGE_REQUEST_CODE = 0;
-    private Uri imageDownloadUri;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +88,7 @@ public class RegisterActivity extends AppCompatActivity {
                         || mImageUri == null) {
                     displayToast("All fields must be answer, please try again");
                 } else {
-                    registerUser(usernameString, emailString, passwordString);
+                    registerUser(emailString, passwordString);
                 }
             }
         });
@@ -126,7 +126,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    private void registerUser(String username, String email, String password) {
+    private void registerUser(String email, String password) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -158,11 +158,33 @@ public class RegisterActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        // Get a URI to the uploaded content
-                        storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        storageReference
+                                .getDownloadUrl()
+                                .addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
-                                imageDownloadUri = uri;
+                                String profileImageUrl;
+                                String username;
+                                String uid;
+
+                                profileImageUrl = uri.toString();
+                                username = usernameEditText.getText().toString();
+                                uid = FirebaseAuth.getInstance().getUid();
+
+                                User user = new User(uid, username, profileImageUrl);
+
+                                FirebaseFirestore.getInstance().collection("users")
+                                        .add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                    @Override
+                                    public void onSuccess(DocumentReference documentReference) {
+
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+
+                                    }
+                                });
                             }
                         });
                     //
