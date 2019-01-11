@@ -5,7 +5,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -29,7 +32,9 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ContactsAdapter.ViewHolder viewHolder, int i) {
-        viewHolder.title.setText(mUserList.get(i).getUsername());
+        User user = mUserList.get(i);
+        viewHolder.title.setText(user.getUsername());
+        Picasso.get().load(user.getUrl()).into(viewHolder.UserImage);
     }
 
     @Override
@@ -40,11 +45,13 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView title;
+        private ImageView UserImage;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             title = itemView.findViewById(R.id.item_user_title);
+            UserImage = itemView.findViewById(R.id.item_user_image_view);
         }
     }
 }
