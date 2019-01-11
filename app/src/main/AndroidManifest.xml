@@ -20,10 +20,14 @@
         </activity>
         <activity android:name=".RegisterActivity" />
         <activity android:name=".MessageActivity" />
-        <activity android:name=".ContactsActivity"
+        <activity
+            android:name=".ContactsActivity"
             android:label="@string/contacts"
-           android:parentActivityName=".MessageActivity"
-            ></activity>
+            android:parentActivityName=".MessageActivity" />
+        <activity
+            android:name=".ChatActivity"
+            android:label="@string/chat"
+            android:parentActivityName=".ContactsActivity"/>
     </application>
 
 </manifest>

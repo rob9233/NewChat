@@ -1,5 +1,7 @@
 package robfernandes.xyz.newchat;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,9 +19,11 @@ import java.util.List;
  */
 public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHolder> {
     private List<User> mUserList;
+    private Context mContext;
 
-    public ContactsAdapter(List<User> userList) {
+    public ContactsAdapter(List<User> userList, Context context) {
         mUserList = userList;
+        mContext = context;
     }
 
     @NonNull
@@ -52,6 +56,14 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 
             title = itemView.findViewById(R.id.item_user_title);
             UserImage = itemView.findViewById(R.id.item_user_image_view);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mContext, ChatActivity.class);
+                    mContext.startActivity(intent);
+                }
+            });
         }
     }
 }

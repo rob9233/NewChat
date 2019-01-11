@@ -19,6 +19,7 @@ public class MessageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_message);
 
         testTextView = findViewById(R.id.activity_message_test);
+        testTextView.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
     }
 
     @Override
