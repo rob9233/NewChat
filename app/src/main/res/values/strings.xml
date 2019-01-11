@@ -9,4 +9,5 @@
     <string name="Add_image">Add Image</string>
     <string name="contacts">Contacts</string>
     <string name="log_out">Log Out</string>
+    <string name="placeholder">placeholder</string>
 </resources>

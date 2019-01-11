@@ -41,7 +41,9 @@ public class MessageActivity extends AppCompatActivity {
     }
 
     private void goToContacts() {
-        testTextView.setText("Contacts!!");
+        Intent intent = new Intent(this, ContactsActivity.class);
+        startActivity(intent);
+
     }
 
     private void logOut() {

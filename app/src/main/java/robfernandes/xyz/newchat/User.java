@@ -8,6 +8,9 @@ public class User {
     private String username;
     private String url;
 
+    public User() {
+    }
+
     public User(String uid, String username, String url) {
         this.uid = uid;
         this.username = username;
@@ -18,7 +21,20 @@ public class User {
         return uid;
     }
 
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     public String getUrl() {
+
         return url;
     }
 
