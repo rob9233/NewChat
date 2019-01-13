@@ -50,6 +50,8 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 
         private TextView title;
         private ImageView UserImage;
+        private int position;
+        private User user;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -61,6 +63,14 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mContext, ChatActivity.class);
+                    if (getAdapterPosition()>=0) {
+                        position = getAdapterPosition();
+                    } else {
+                        position = 0;
+                    }
+
+                    user = mUserList.get(position);
+                    intent.putExtra("user", user);
                     mContext.startActivity(intent);
                 }
             });

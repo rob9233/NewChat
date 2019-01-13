@@ -8,13 +8,20 @@ import android.support.v7.widget.RecyclerView;
 public class ChatActivity extends AppCompatActivity {
     private ChatAdapter mChatAdapter;
     private RecyclerView mRecyclerView;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
+        getIntentExtras();
         setRecyclerView();
+        getSupportActionBar().setTitle(user.getUsername());
+    }
+
+    private void getIntentExtras() {
+        user = getIntent().getExtras().getParcelable("user");
     }
 
     private void setRecyclerView() {

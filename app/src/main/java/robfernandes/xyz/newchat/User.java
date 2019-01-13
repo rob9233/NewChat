@@ -1,9 +1,12 @@
 package robfernandes.xyz.newchat;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Roberto Fernandes on 07/01/2019.
  */
-public class User {
+public class User implements Parcelable {
     private String uid;
     private String username;
     private String url;
@@ -16,6 +19,24 @@ public class User {
         this.username = username;
         this.url = url;
     }
+
+    protected User(Parcel in) {
+        uid = in.readString();
+        username = in.readString();
+        url = in.readString();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
     public String getUid() {
         return uid;
@@ -40,5 +61,17 @@ public class User {
 
     public String getUsername() {
         return username;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(uid);
+        dest.writeString(username);
+        dest.writeString(url);
     }
 }
