@@ -19,8 +19,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -136,13 +134,10 @@ public class RegisterActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             displayToast("Register succeed");
-                            FirebaseUser user = mAuth.getCurrentUser();
                             saveUserInfoInFirebase();
-                            updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
                             displayToast("Register failed, please try again");
-                            updateUI(null);
                         }
                     }
                 });
@@ -176,12 +171,24 @@ public class RegisterActivity extends AppCompatActivity {
                                 User user = new User(uid, username, profileImageUrl);
 
                                 FirebaseFirestore.getInstance().collection("users")
-                                        .add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                        //to add with a random name the document
+/*                                        .add(user)
+                                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                     @Override
                                     public void onSuccess(DocumentReference documentReference) {
-
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
+                                        updateUI();
+                                    }})*/
+                                // to add with a selected name
+                                        .document(uid)
+                                        .set(user)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                updateUI();
+                                            }
+                                        })
+                                        //until here
+                                .addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
                                     }
@@ -200,13 +207,10 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }
 
-    private void updateUI(FirebaseUser user) {
-        if (user != null) {
+    private void updateUI() {
             Intent intent = new Intent(this, MessageActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-
             startActivity(intent);
-        }
     }
 
     private void displayToast(String message) {

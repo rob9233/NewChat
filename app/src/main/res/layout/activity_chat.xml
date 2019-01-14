@@ -7,7 +7,7 @@
     tools:context=".ChatActivity"
     android:background="@color/background">
 
-    <android.support.v7.widget.RecyclerView
+    <android.support.v7.widget.RecyclerViewr
         android:id="@+id/activity_chat_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="188dp"
@@ -17,7 +17,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"></android.support.v7.widget.RecyclerView>
+        app:layout_constraintVertical_bias="0.0"></android.support.v7.widget.RecyclerViewr>
 
     <EditText
         android:id="@+id/activity_chat_enter_message_edit_text"
