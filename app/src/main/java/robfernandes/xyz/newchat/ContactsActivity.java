@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -43,7 +44,10 @@ public class ContactsActivity extends AppCompatActivity {
                             for (DocumentSnapshot document:
                                  documents) {
                                 User user = document.toObject(User.class);
-                                mUserList.add(user);
+                                String logedInUserUID =FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                if (!user.getUid().equals(logedInUserUID)) {
+                                    mUserList.add(user);
+                                }
                             }
                             setRecyclerView();
                         } else  {
