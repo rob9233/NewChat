@@ -139,9 +139,9 @@ public class ChatActivity extends AppCompatActivity {
                                     if (doc.getType() == DocumentChange.Type.ADDED) {
                                         Message message = doc.getDocument().toObject(Message.class);
                                         mChatAdapter.addMessage(message);
-                                        mChatAdapter.notifyDataSetChanged();
                                     }
                                 }
+                                mChatAdapter.notifyDataSetChanged();
                             }
                         }
                     });
@@ -154,7 +154,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void setRecyclerView() {
-           mChatAdapter = new ChatAdapter(loggedInUser.getUid());
+           mChatAdapter = new ChatAdapter(loggedInUser.getUid(), userReceiver);
             mRecyclerView = findViewById(R.id.activity_chat_recycler_view);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
             mRecyclerView.setAdapter(mChatAdapter);
