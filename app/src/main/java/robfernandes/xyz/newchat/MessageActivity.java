@@ -7,7 +7,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MessageActivity extends AppCompatActivity {
 
@@ -19,7 +22,18 @@ public class MessageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_message);
 
         testTextView = findViewById(R.id.activity_message_test);
-        testTextView.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+
+        FirebaseFirestore.getInstance().collection("users").document(
+                FirebaseAuth.getInstance().getUid()
+        ).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        User user = documentSnapshot.toObject(User.class);
+                        testTextView.setText("Hello "+ user.getUsername());
+                    }
+                });
+
     }
 
     @Override

@@ -9,6 +9,6 @@
         android:id="@+id/activity_message_test"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:text="SMS"/>
+       />
 
 </android.support.constraint.ConstraintLayout>
