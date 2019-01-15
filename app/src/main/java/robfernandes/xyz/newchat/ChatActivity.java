@@ -2,6 +2,7 @@ package robfernandes.xyz.newchat;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,8 +14,16 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.List;
 
 public class ChatActivity extends AppCompatActivity {
     private ChatAdapter mChatAdapter;
@@ -22,6 +31,7 @@ public class ChatActivity extends AppCompatActivity {
     private User userReceiver;
     private Button sendMessageBtn;
     private EditText messageEditText;
+    private User loggedInUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +40,9 @@ public class ChatActivity extends AppCompatActivity {
 
         sendMessageBtn = findViewById(R.id.activity_chat_send_message_btn);
         messageEditText = findViewById(R.id.activity_chat_enter_message_edit_text);
-       getIntentExtras();
-        setRecyclerView();
+
+        getIntentExtras();
+        getLoggedInUser();
        getSupportActionBar().setTitle(userReceiver.getUsername());
 
         sendMessageBtn.setOnClickListener(new View.OnClickListener() {
@@ -42,7 +53,7 @@ public class ChatActivity extends AppCompatActivity {
                     Message message = new Message();
                     message.setMessage(text);
                     message.setMessageReceiver(userReceiver.getUid());
-                    message.setMessageSender(FirebaseAuth.getInstance().getUid());
+                    message.setMessageSender(loggedInUser.getUid());
                     message.setTime(System.currentTimeMillis());
 
                     sendMessage(message);
@@ -52,7 +63,20 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         });
+    }
 
+    private void getLoggedInUser() {
+        FirebaseFirestore.getInstance().collection("users")
+                .document(FirebaseAuth.getInstance().getUid())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        loggedInUser = documentSnapshot.toObject(User.class);
+                        setRecyclerView();
+                        fetchMessages();
+                    }
+                });
     }
 
     private void sendMessage(Message message) {
@@ -95,15 +119,42 @@ public class ChatActivity extends AppCompatActivity {
                 });
     }
 
+    private void fetchMessages() {
+        if (loggedInUser != null) {
+
+            String fromId = loggedInUser.getUid();
+            String toId = userReceiver.getUid();
+
+            FirebaseFirestore.getInstance().collection("/conversations")
+                    .document(fromId)
+                    .collection(toId)
+                    .orderBy("time", Query.Direction.ASCENDING)
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                            List<DocumentChange> documentChanges = queryDocumentSnapshots.getDocumentChanges();
+
+                            if (documentChanges != null) {
+                                for (DocumentChange doc: documentChanges) {
+                                    if (doc.getType() == DocumentChange.Type.ADDED) {
+                                        Message message = doc.getDocument().toObject(Message.class);
+                                        mChatAdapter.addMessage(message);
+                                        mChatAdapter.notifyDataSetChanged();
+                                    }
+                                }
+                            }
+                        }
+                    });
+
+        }
+    }
+
     private void getIntentExtras() {
         userReceiver = getIntent().getExtras().getParcelable("user");
     }
 
     private void setRecyclerView() {
-           mChatAdapter = new ChatAdapter();
-        mChatAdapter.addMessage(true, "estou a enviar");
-        mChatAdapter.addMessage(true, "estou a enviar outra");
-        mChatAdapter.addMessage(false, "estou a enviar receber");
+           mChatAdapter = new ChatAdapter(loggedInUser.getUid());
             mRecyclerView = findViewById(R.id.activity_chat_recycler_view);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
             mRecyclerView.setAdapter(mChatAdapter);

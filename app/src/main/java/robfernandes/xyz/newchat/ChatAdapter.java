@@ -13,12 +13,15 @@ import java.util.List;
  * Created by Roberto Fernandes on 12/01/2019.
  */
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
-    private List<Boolean> isSendingList = new ArrayList<>();
-    private List<String> messageList = new ArrayList<>();
+    private List<Message> mMessageList = new ArrayList<>();
+    private String loggedInUserUID;
 
-    public void addMessage(boolean isSending, String message) {
-        isSendingList.add(isSending);
-        messageList.add(message);
+    public void addMessage(Message message) {
+        mMessageList.add(message);
+    }
+
+    public ChatAdapter(String loggedInUserUID) {
+        this.loggedInUserUID = loggedInUserUID;
     }
 
     @NonNull
@@ -39,7 +42,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        if (isSendingList.get(position)) {
+        if (isSending(mMessageList.get(position).getMessageSender())) {
             return 0;
         } else {
             return 1;
@@ -53,8 +56,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        if (isSendingList!=null) {
-            return isSendingList.size();
+        if (mMessageList!=null) {
+            return mMessageList.size();
         }
         return 0;
     }
@@ -63,5 +66,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
         }
+    }
+
+    private boolean isSending (String senderUUID) {
+        return senderUUID.equals(loggedInUserUID);
     }
 }
