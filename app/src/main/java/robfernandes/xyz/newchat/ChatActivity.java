@@ -67,7 +67,7 @@ public class ChatActivity extends AppCompatActivity {
         .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
-                Toast.makeText(ChatActivity.this, "Message sent", Toast.LENGTH_SHORT).show();
+
             }
         })
         .addOnFailureListener(new OnFailureListener() {
@@ -76,6 +76,23 @@ public class ChatActivity extends AppCompatActivity {
                 Toast.makeText(ChatActivity.this, "Error message NOT sent", Toast.LENGTH_SHORT).show();
             }
         });
+        //add to the other user
+        FirebaseFirestore.getInstance().collection("conversations")
+                .document(receiverUID)
+                .collection(fromUID)
+                .add(message)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        messageEditText.setText("");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(ChatActivity.this, "Error message NOT sent", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void getIntentExtras() {
